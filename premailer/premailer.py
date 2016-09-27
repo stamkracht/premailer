@@ -597,6 +597,10 @@ class Premailer(object):
     def _css_rules_to_string(self, rules):
         """given a list of css rules returns a css string
         """
+        skip_classes = (
+            cssutils.css.csscomment.CSSComment,
+            cssutils.css.cssunknownrule.CSSUnknownRule,
+        )
         lines = []
         for item in rules:
             if isinstance(item, tuple):
@@ -605,7 +609,7 @@ class Premailer(object):
             # media rule
             else:
                 for rule in item.cssRules:
-                    if isinstance(rule, cssutils.css.csscomment.CSSComment):
+                    if isinstance(rule, skip_classes):
                         continue
                     for key in rule.style.keys():
                         rule.style[key] = (
